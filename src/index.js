@@ -3,6 +3,7 @@ const app = express();
 
 const seed = require('./initialize_db');
 
+// seed tables for development if they are empty
 seed();
 
 // === Posts ===

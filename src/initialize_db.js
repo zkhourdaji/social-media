@@ -1,17 +1,5 @@
-const { Pool } = require('pg');
-const { db } = require('../environment');
-// import { TinyPg } from 'tinypg';
 const { TinyPg } = require('tinypg');
 const Path = require('path');
-
-// const pool = new Pool({
-//   user: db.user,
-//   host: db.host,
-//   database: db.database,
-//   password: db.password,
-//   port: db.port
-// });
-
 
 const tinypg = new TinyPg({
   connection_string: `postgres://postgres:password@localhost:5432/social-media1?sslmode=disable`,
@@ -26,13 +14,25 @@ async function seed_users() {
       .then(results => console.log(results))
       .catch(error => console.error(error.stack));
   } else {
-    console.log(user_results);
     console.log('Users table already has rows');
+  }
+}
+
+async function seed_posts() {
+  const post_results = await tinypg.query('SELECT * FROM post');
+
+  if (!post_results.rows.length) {
+    tinypg.sql('post')
+      .then(results => console.log(results))
+      .catch(error => console.error(error.stack))
+  } else {
+    console.log('Post table already has rows');
   }
 }
 
 async function seed() {
   seed_users();
+  seed_posts();
 }
 
 module.exports = seed;
