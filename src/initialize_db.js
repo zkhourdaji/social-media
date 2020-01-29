@@ -10,7 +10,7 @@ async function seed_users() {
   const user_results = await tinypg.query('SELECT * FROM user_account');
 
   if (!user_results.rows.length) {
-    tinypg.sql('user_accounts')
+    tinypg.sql('user_account')
       .then(results => console.log(results))
       .catch(error => console.error(error.stack));
   } else {
@@ -31,8 +31,8 @@ async function seed_posts() {
 }
 
 async function seed() {
-  seed_users();
-  seed_posts();
+  await seed_users();
+  await seed_posts();
 }
 
 module.exports = seed;
