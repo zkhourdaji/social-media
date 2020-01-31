@@ -41,7 +41,7 @@ async function seedUsers() {
       await tinypg.sql('seed.user_accounts');
       console.log('Sucessfully seeded Users');
     } else {
-      console.error('Seeding users failed: User table not empty!');
+      console.error('Users table already has rows');
     }
   } catch (error) {
     console.error(error);
@@ -69,6 +69,10 @@ async function seedPosts() {
 async function seedComments() {
   if (await postTableIsEmpty()) {
     console.error('Need posts before seeding comments');
+  }
+  if (!await commentTableIsEmpty()) {
+    console.error('Comment table already has rows');
+    return
   }
 
   const zafer = await getUserByEmail('khourdaji@gmail.com');
@@ -106,7 +110,6 @@ async function getPostsByUserId(userId) {
     console.error(error.stack);
   }
 }
-
 
 async function seed() {
   await seedUsers();
