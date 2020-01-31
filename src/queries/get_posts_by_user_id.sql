@@ -1,0 +1,1 @@
+SELECT * FROM post WHERE user_account_id = :userId;
