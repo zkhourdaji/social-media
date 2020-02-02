@@ -1,3 +1,4 @@
+DELETE FROM friendship;
 DELETE FROM comment_like;
 DELETE FROM comment;
 DELETE FROM post_like;

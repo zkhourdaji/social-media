@@ -19,7 +19,11 @@ const getFriendsPostsByUserId = (request, response) => {
 }
 
 const addPost = (request, response) => {
-
+    const userId = request.params.userId;
+    const newPostBody = request.body.body;
+    pool.query(`INSERT INTO post(user_account_id, created_on, body) VALUES (${userId}, now(), '${newPostBody}')`)
+        .then(_ => response.json({ message: 'Success' }))
+        .catch(error => response.json(error));
 }
 
 const editPost = (request, response) => {

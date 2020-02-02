@@ -33,6 +33,15 @@ async function commentTableIsEmpty() {
     console.error(error);
   }
 }
+
+async function friendshipTableIsEmpty() {
+  try {
+    const friendship_results = await tinypg.query('SELECT * FROM friendship');
+    return !friendship_results.rows.length;
+  } catch (error) {
+    console.error(error);
+  }
+}
 // ==============================================
 
 async function seedUsers() {
@@ -93,12 +102,33 @@ async function seedComments() {
   }
 }
 
+async function seedFrienships() {
+  if (await userTableIsEmpty()) {
+    console.error('Need users before seeding frienships');
+  }
+  if (await friendshipTableIsEmpty()) {
+    console.error('Friendship table already has rows');
+    return;
+  }
+  try {
+    const userOne = (await getUserByEmail('khourdaji@gmail.com')).id;
+    const userTwo = (await getUserByEmail('john@email.com')).id;
+    await tinypg.sql('seed.friendship', {
+      userOne, userTwo,
+      status: 'Pending'
+    });
+    console.log("Successfully seeded frienships")
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 async function getUserByEmail(email) {
   try {
     const results = await tinypg.sql('get_user_by_email', { email });
     return results.rows[0];
   } catch (error) {
-    console.error(error.stack);
+    console.error(error.error);
   }
 }
 
@@ -113,6 +143,7 @@ async function getPostsByUserId(userId) {
 
 async function seed() {
   await seedUsers();
+  await seedFrienships();
   await seedPosts();
   await seedComments();
 }
